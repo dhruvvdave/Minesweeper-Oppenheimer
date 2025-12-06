@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Minesweeper: Oppenheimer Edition - A dramatic web-based minesweeper game">
+    <title>Minesweeper: Oppenheimer Edition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-effects"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="game-header">
+            <h1 class="game-title">MINESWEEPER</h1>
+            <p class="game-subtitle">OPPENHEIMER EDITION</p>
+        </header>
+
+        <!-- Controls Section -->
+        <div class="controls-bar">
+            <div class="control-group">
+                <label for="difficulty-select">Difficulty:</label>
+                <select id="difficulty-select" class="difficulty-selector">
+                    <option value="beginner">Beginner (9x9)</option>
+                    <option value="intermediate" selected>Intermediate (16x16)</option>
+                    <option value="expert">Expert (30x16)</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            
+            <button id="settings-btn" class="icon-btn" title="Settings">
+                <span class="icon">⚙️</span>
+            </button>
+            
+            <button id="mute-btn" class="icon-btn" title="Toggle Sound">
+                <span class="icon">🔇</span>
+            </button>
+        </div>
+
+        <!-- Game Stats -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-icon">💣</span>
+                <span id="mine-counter" class="stat-value">40</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">⏱️</span>
+                <span id="timer" class="stat-value">00:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">📊</span>
+                <span id="move-counter" class="stat-value">0</span>
+                <span class="stat-label">moves</span>
+            </div>
+        </div>
+
+        <!-- Game Board Container -->
+        <div class="game-board-container">
+            <div id="game-board" class="game-board"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-bar">
+            <div class="high-score">
+                <span class="icon">🏆</span>
+                <span>Best: </span>
+                <span id="high-score-display">--:--</span>
+            </div>
+            <button id="reset-btn" class="reset-btn">
+                <span class="icon">🔄</span>
+                <span>Reset</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content settings-panel">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" data-modal="settings-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="sound-toggle" checked>
+                        <span>Sound Effects</span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <span>Animation Speed:</span>
+                        <select id="animation-speed">
+                            <option value="slow">Slow</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="fast">Fast</option>
+                        </select>
+                    </label>
+                </div>
+                <div id="custom-settings" class="setting-item custom-settings" style="display: none;">
+                    <h3>Custom Game Settings</h3>
+                    <div class="custom-input-group">
+                        <label>
+                            <span>Rows:</span>
+                            <input type="number" id="custom-rows" min="5" max="30" value="16">
+                        </label>
+                        <label>
+                            <span>Columns:</span>
+                            <input type="number" id="custom-cols" min="5" max="30" value="16">
+                        </label>
+                        <label>
+                            <span>Mines:</span>
+                            <input type="number" id="custom-mines" min="1" max="200" value="40">
+                        </label>
+                    </div>
+                    <button id="apply-custom-btn" class="apply-btn">Apply Custom Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content game-over-panel">
+            <div class="modal-header">
+                <h2 id="game-over-title">Game Over</h2>
+            </div>
+            <div class="modal-body">
+                <div id="game-over-message" class="game-over-message"></div>
+                <div class="game-stats">
+                    <div class="stat-row">
+                        <span>Time:</span>
+                        <span id="final-time">00:00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Moves:</span>
+                        <span id="final-moves">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Accuracy:</span>
+                        <span id="final-accuracy">0%</span>
+                    </div>
+                </div>
+                <div class="quote" id="game-quote"></div>
+                <div class="modal-actions">
+                    <button id="play-again-btn" class="primary-btn">Play Again</button>
+                    <button id="change-difficulty-btn" class="secondary-btn">Change Difficulty</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal (Welcome Screen) -->
+    <div id="instructions-modal" class="modal active">
+        <div class="modal-content instructions-panel">
+            <div class="modal-header">
+                <h2>How to Play</h2>
+            </div>
+            <div class="modal-body">
+                <div class="instructions-content">
+                    <h3>Objective</h3>
+                    <p>Clear all cells without detonating any mines. Use logic and deduction to identify where mines are hidden.</p>
+                    
+                    <h3>Controls</h3>
+                    <ul>
+                        <li><strong>Left Click:</strong> Reveal a cell</li>
+                        <li><strong>Right Click:</strong> Flag/unflag a suspected mine</li>
+                        <li><strong>Middle Click:</strong> Chord click (reveal surrounding cells if flags match number)</li>
+                        <li><strong>R Key:</strong> Reset game</li>
+                        <li><strong>F Key:</strong> Toggle flag mode</li>
+                    </ul>
+                    
+                    <h3>Numbers</h3>
+                    <p>Numbers indicate how many mines are in the 8 adjacent cells. Use this information to deduce mine locations.</p>
+                    
+                    <h3>First Click Protection</h3>
+                    <p>Your first click will never be a mine - the board adjusts to ensure a safe start.</p>
+                    
+                    <div class="quote">"Now I am become Death, the destroyer of worlds."</div>
+                </div>
+                <button id="begin-btn" class="primary-btn large-btn">Begin Simulation</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
