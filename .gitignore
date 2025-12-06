@@ -1,0 +1,41 @@
+# Compiled Java files
+*.class
+*.jar
+
+# Java build directories
+out/
+target/
+build/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Log files
+*.log
+
+# Node modules (if any npm tools are used later)
+node_modules/
+
+# Package files
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# Build artifacts
+manifest.txt
